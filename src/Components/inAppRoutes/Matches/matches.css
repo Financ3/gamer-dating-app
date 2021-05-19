@@ -1,151 +1,166 @@
-#matches-view{
-    background-color: rgb(97, 198, 146);
-height:100%;
-
+.matches-top-level-container {
+  height: 100%;
 }
 
-#mappedMatches{
-    width:90%;
-    display:flex;
-    justify-content: flex-start;
-    flex-direction: column;
-}
-.matches{
-    margin-top:1rem;
-    padding:.25rem;
-    margin-left:15%;
-width:70%;
-background-color: rgb(62,62,62,0.3);
-border-radius: 30px 30px 30px 30px;
-    box-shadow: 3px 3px 6px 1px rgb(62,62, 62);
-}
-.matches:hover{
-    background-color: rgb(97, 198, 146);
-    transform: scale(1.05);
+.matches-title {
+  background-color: #2f2f2d;
+  color: #ece1cb;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 3px black;
+  margin-top: 10px;
+  width: 100%;
 }
 
-.matches-picture-view{
-    margin-top:1rem;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    overflow-x:scroll;
-font-size: 10px;
-}
-#mapped-matches-container{
-    margin-bottom: 1rem;
-    width:100%;
-height:50vh;
-    overflow-y: scroll;
-    box-shadow: 3px 3px 6px 1px rgb(62,62, 62);
-
-}
-#lastMessage{
-    position:sticky;
-margin-left:0.5rem;
-margin-top:1rem;
-height:2rem;
-width:17rem;
-border-right:1px;
-display: flex;
-justify-content: flex-start;
-align-items: flex-start;
-overflow:scroll;
-
+.matches-title-pictures-container {
+  width: 100%;
+  padding: 10px;
 }
 
-.gamer{
-    float: left;
-}
-.matches-profile-photo{
-    height:3rem;
-    width:3rem;
-    border:10px ridge rgb(68,103,85);
-border-radius: 50%;
-box-shadow: 3px 3px 6px 1px rgb(62,62, 62)
+.matches-picture-view {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-x: scroll;
 }
 
-.matches-picture-div{
-    border-radius: 105px 105px 10px 10px;
-    border: 10px ridge rgb(68,103,85);
-    height: 6rem;
-    width: 6rem;
-    float: right;
-    overflow: hidden;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center; 
-margin-left:1px;
-}
-.matches-picture-div:hover{
-    transform:scale(1.02)
+.mappedMatches {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 125px;
+  padding: 10px 0px;
+  background-color: #ece1cb;
+  padding: 10px;
 }
 
-.startChat{
-    height: 3.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-margin-left:5rem;
-margin-right:5rem;
-    border:5px outset rgb(68,103,85);
-    background-color: rgb(62,62,62,0.3);
-    box-shadow: 3px 3px 6px 1px rgb(62,62, 62);
-
-}
-.startChat:hover{
-    background-color: rgb(97, 198, 146);
-    transform: scale(1.05);
-
+.mappedMatchesContainer {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-#chatSelection{
-    margin-top:2.5%;
-    width: 90vw;
-    height:65vh;
-    overflow:scroll;
-    box-shadow: 3px 3px 6px 1px rgb(62,62, 62);
-    border-radius: 35% 35% 10px 10px;
-    border: 10px ridge rgb(68,103,85);
-    overflow: scroll;
-
-}
-#chat-view{
-    margin-left:5vw;
+.mappedMatchesContainer h3 {
+  font-family: "Space Grotesk SemiBold";
+  margin-top: 10px;
 }
 
-#toggle2{
-    height:2rem;
-    width:2rem;
-position: absolute;
-margin-left:-1vw;
-    background-color:whitesmoke;
-    border:5px inset rgb(68,103,85);
-    border-radius: 50px 50px 50px 50px;
-    box-shadow: 3px 3px 6px 1px rgb(62,62, 62)
-}
-.wow{
-    display: flex;
-    flex-direction: flex-start;
-}
-#gamertag{
-    font-family: 'Space Grotesk';
-    font-size: small;
-float:left
-}
-h3{
-    font-family: 'Space Grotesk SemiBold';
-}
-h6{
-    font-family: 'Poppins Thin';
-    margin-top:2.5px;
-    margin-bottom:5px;
-    font-size: 30px;
-    background-color: rgb(62,62,62,0.3);
-    box-shadow: 3px 3px 6px 1px rgb(62,62, 62);
-
+.matches-picture-div {
+  border-radius: 50%;
+  box-shadow: 1px 1px 3px black;
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-h2{
-    font-family: 'Space Grotesk SemiBold';
+.matches-picture-div:hover {
+  transform: scale(1.02);
+}
+
+.match1 {
+  padding: 10px;
+}
+
+.match1-title {
+  background-color: #2f2f2d;
+  color: #ece1cb;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 1px 1px 3px black;
+}
+
+#mapped-matches-container {
+  width: 100%;
+  overflow-y: scroll;
+  box-shadow: 1px 1px 3px black;
+  background-color: #ece1cb;
+  padding: 0px 10px;
+}
+
+.matches {
+  background-color: #2f2f2d;
+  color: #ece1cb;
+  border-radius: 30px;
+  box-shadow: 1px 1px 3px black;
+  margin: 10px 0px;
+}
+
+.matches:hover {
+  background-color: rgb(97, 198, 146);
+}
+
+.wow {
+  display: flex;
+  flex-direction: flex-start;
+  align-items: center;
+  height: 60px;
+  padding: 10px;
+}
+
+.matches-profile-photo {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#lastMessage {
+  margin-left: 10px;
+  margin-top: 1rem;
+  height: 2rem;
+  width: 17rem;
+  border-right: 1px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: scroll;
+}
+
+.gamer {
+  float: left;
+}
+
+/* Styles for the toggled view. the stuff that shows when they click "start new chat" */
+#chat-view {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#chatSelection {
+  width: 100%;
+  overflow: scroll;
+  box-shadow: 3px 3px 6px 1px rgb(62, 62, 62);
+}
+
+#toggle2 {
+  height: 2rem;
+  width: 2rem;
+  position: absolute;
+  margin-left: -1vw;
+  background-color: whitesmoke;
+  border: 5px inset rgb(68, 103, 85);
+  border-radius: 50px 50px 50px 50px;
+  box-shadow: 3px 3px 6px 1px rgb(62, 62, 62);
+}
+
+#gamertag {
+  font-family: "Space Grotesk";
+  font-size: small;
+  float: left;
 }

@@ -10,7 +10,6 @@ import {useHistory} from 'react-router-dom'
 import "./matches.css";
 
 const Matches = (props) => {
-  console.log(props)
   let history = useHistory()
   const [allMatches,setAllMatches]= useState([])
   const [toggle,setToggle]= useState(false)
@@ -31,10 +30,6 @@ useEffect(()=>{
   
   },[profile_id,getMatches]);
 
-  const handleClick=()=>{
-    setToggle(!toggle)
-  }
-
 
   let mappedPhotos = allMatches.map((match, i) => {
     return (
@@ -47,37 +42,26 @@ useEffect(()=>{
         <ExistingChats key={i} match={match} />
     );
   });
-  
-  let mappedMatchChat = allMatches.map((match,i) =>{
-    return(
-      <MappedMatchChat match={match} key={i}/>
-    )
-  })
 
   return (
-    <div id="matches-view">
+    <div className="main-display">
       <Header/> 
-      <h6>It's Dangerous To Go Alone!</h6>
-      <div className="matches-picture-view">{mappedPhotos}</div>
-     {!toggle ?   (
-     <div id='match1'>    
-     <h6>Rekindle A Spark...</h6>
-     <div id="mapped-matches-container">
-        {mappedMatches}
-        </div> 
-        <div onClick={()=>handleClick()} className='startChat'>Select Player 2</div>
-      </div>
-        ):(
-        <div id='chat-view'>
-        
-          <div id='chatSelection'> 
-          <div onClick={()=>handleClick()} id='toggle2'></div>
-              <div id='mappedMatchChat'>{mappedMatchChat}</div>
-              
-          </div>     
+      <div className="matches-title-pictures-container">
+        <div className="matches-title">
+          <h1>Matches</h1>
         </div>
-        )
-        }
+        <div className="matches-picture-view">{mappedPhotos}</div>
+      </div>
+      
+
+      <div className='match1'>  
+        <div className="match1-title">
+          <h1>Chats</h1>
+        </div>  
+        <div id="mapped-matches-container">
+          {mappedMatches}
+        </div> 
+      </div>
     </div>
   );
 };

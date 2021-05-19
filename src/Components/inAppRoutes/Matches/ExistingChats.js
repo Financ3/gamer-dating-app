@@ -19,23 +19,23 @@ axios.get(`/api/message/${match_id}`).then(res=>{
 
 return (
     (props.userReducer.user.profile_id === match.profile1 && message !== undefined ? (
- <div className="matches row">
-<Link to={`/chats/${match_id}`}>
-        <div className="wow">
-
+ <div className="matches">
+    <Link to={`/chats/${match_id}`}>
+      <div className="wow">
+      <div className="matches-profile-photo">
           <img
-            className="matches-profile-photo"
             src={match.photo2}
             alt="1"
           ></img>
-          <div className='gamer'>
-            <h1 id='gamertag'>{match.gamertag2}</h1>
-            <p id='lastMessage'>{message}</p>
-          </div>
         </div>
-        </Link>
+        <div className='gamer'>
+          <h1 id='gamertag'>{match.gamertag2}</h1>
+          <p id='lastMessage'>{message}</p>
+        </div>
+      </div>
+    </Link>
       </div>) : (
-      <div className="matches row">
+      <div className="matches">
         <Link to={`/chats/${match_id}`}>
         <div className="wow">
           <img
