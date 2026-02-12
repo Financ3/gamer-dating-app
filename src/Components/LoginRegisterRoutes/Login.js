@@ -15,6 +15,8 @@ const Login = (props) => {
 
     const login = async () => {
         let loggedInUser = '';
+
+        console.log("logging in with email: ", email, " and password: ", password)
         
         try {
             loggedInUser = await axios.post('/auth/login', {email, password})

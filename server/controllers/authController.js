@@ -10,12 +10,14 @@ module.exports = {
             const [existingUser] = await db.get_new_user(user.email)
 
             //if the user already exists, then respond to the front end.
-            if (existingUser){
+            if (existingUser){1
                 res.status(409).send("User already registered!")
             } else {
                 //if the user doesn't exist. Create a new user object
                 let salt = bcrypt.genSaltSync(10);
+                console.log("salt", salt)
                 let hash = bcrypt.hashSync(user.password, salt);
+                console.log("hash", hash)
                 let [newUser] = await db.create_user(user.email, hash);
 
                 //remove the hash from the newUser object, then send it back to the front end.

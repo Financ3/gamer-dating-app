@@ -68,14 +68,14 @@ CREATE TABLE chats (
 );
 
 INSERT INTO users(email, hash)
-VALUES ('Tanner.Francis11@gmail.com', '$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm'), --user_id 1
-('thejaredandersen@gmail.com','$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm'),--user_id 2
-('sn3541@gmail.com','$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm'),--user_id 3
-('lisa@gmail.com','$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm'),--user_id 4
-('moe@gmail.com', '$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm'),-->5
-('curlina@gmail.com', '$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm'),-->6
-('sophie@gmail.com', '$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm'),-->7
-('jessica@gmail.com', '$2y$10$o.agZGzQMbecrkt13OOsI.yod6bG0Uz7tXccL9P61h6BrdpyeLMpm');-->8
+VALUES ('Tanner.Francis11@gmail.com', '$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi'), --user_id 1 (pass: testpass123#)
+('thejaredandersen@gmail.com','$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi'),--user_id 2
+('sn3541@gmail.com','$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi'),--user_id 3
+('lisa@gmail.com','$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi'),--user_id 4
+('moe@gmail.com', '$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi'),-->5
+('curlina@gmail.com', '$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi'),-->6
+('sophie@gmail.com', '$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi'),-->7
+('jessica@gmail.com', '$2a$10$.V75joCUfgw42VObSVo.Te62mNpGfOxCmpDil8otubAHxznLrVfsi');-->8
 
 INSERT INTO profiles (first_name, last_name, gamer_tag, location, about_me, sexual_orientation, sex, preferred_pronoun, height, activity_level, religion, education, occupation, kids, alcohol, smoking, cannabis, recreational_drugs, favorite_food, current_game, photo_one, photo_two, photo_three, photo_four, photo_five, user_id)
 VALUES ('Tanner','Francis','Financ3', 'Austin, TX', 'This is a super short intro to who I am. Hi everyone!','Straight', 'Male', 'He/Him', '5 ft 10 in', 'Active', 'Agnostic','BYU','Web Developer','No Kids', 'Socially','Never','Sometimes','Never','','Valheim','https://scontent-hou1-1.xx.fbcdn.net/v/t31.18172-8/16462954_10154716244105865_4173466093140820629_o.jpg?_nc_cat=102&ccb=1-3&_nc_sid=09cbfe&_nc_ohc=8CgKs38cNHcAX_wUty9&_nc_ht=scontent-hou1-1.xx&oh=44a47bcb7c41c2ad73f2c1b7e261bae9&oe=60B2DFC4', 'https://scontent-hou1-1.xx.fbcdn.net/v/t1.18169-9/15895377_10154637553195865_5109707149084553030_n.jpg?_nc_cat=105&ccb=1-3&_nc_sid=174925&_nc_ohc=DwnINbOj9a8AX8A2bn_&_nc_ht=scontent-hou1-1.xx&oh=6fd5a9b463b2cc43fdd6cca0cb4a1f5f&oe=60B1F280', 'https://scontent-hou1-1.xx.fbcdn.net/v/t1.18169-9/13254402_10153966928410865_3994538279770474787_n.jpg?_nc_cat=109&ccb=1-3&_nc_sid=174925&_nc_ohc=O7kcJqhDUQ0AX_2n1z7&_nc_ht=scontent-hou1-1.xx&oh=abf206ae916b6aed909d06a1a7d2f1e5&oe=60B0009B','https://scontent-hou1-1.xx.fbcdn.net/v/t1.18169-9/10405430_10152724053705865_5503561984453623128_n.jpg?_nc_cat=106&ccb=1-3&_nc_sid=174925&_nc_ohc=IRZPE2aO5cEAX8DSxoE&_nc_ht=scontent-hou1-1.xx&oh=aa7fafefc88b97fc61030094ffd56c46&oe=60B32447','',1),--profile_id 1
