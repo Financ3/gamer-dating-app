@@ -23,7 +23,9 @@ jobs:
         run: npm install
 
       - name: Build frontend
-        run: npm run build
+        run: |
+          export NODE_OPTIONS=--openssl-legacy-provider
+          npm run build
 
       - name: Install backend dependencies
         run: cd server && npm install
@@ -38,6 +40,7 @@ jobs:
             set -e
             cd /path/to/app
             git pull
+            export NODE_OPTIONS=--openssl-legacy-provider
             npm install
             npm run build
             cd server && npm install
@@ -48,6 +51,7 @@ jobs:
               npm install -g serve
             fi
             pm2 delete serve || true
+            export NODE_OPTIONS=--openssl-legacy-provider
             pm2 start "serve" --name "frontend" -- -s build -l 3000
 
 
