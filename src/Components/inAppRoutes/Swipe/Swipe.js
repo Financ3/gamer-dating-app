@@ -24,7 +24,7 @@ function Swipe(props) {
             setIsMatch("empty");
         }
         props.getProfiles(props.userReducer.user.profile_id);
-    },[props.userReducer.user.profile_id]);
+    },[props]);
 
     const forward = () => { 
         if (idx === props.profileReducer.viewableProfiles.length-1) {

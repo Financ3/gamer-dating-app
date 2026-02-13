@@ -1,6 +1,5 @@
-import React, { useEffect,useState } from "react";
+import { useEffect,useState } from "react";
 import { connect } from "react-redux";
-import MappedMatchChat from './MappedMatchChat'
 import axios from "axios";
 import Header from '../../Header'
 import ExistingChats from './ExistingChats'
@@ -12,7 +11,6 @@ import "./matches.css";
 const Matches = (props) => {
   let history = useHistory()
   const [allMatches,setAllMatches]= useState([])
-  const [toggle,setToggle]= useState(false)
 
   const {profile_id}= props.userReducer.user
 const {getMatches} =props

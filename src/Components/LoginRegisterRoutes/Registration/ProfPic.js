@@ -43,7 +43,7 @@ function ProfPic(props) {
             <div className="profpic-view-picture-container-main">
                 <p>Main Profile Pic:</p>
                 <div className="profpic-view-image-container">
-                    {!profilePic1?<img src="https://via.placeholder.com/150" alt="placeholder"/>:<img src={profilePic1} alt="user-picture-1"/>}
+                    {!profilePic1?<img src="https://via.placeholder.com/150" alt="placeholder"/>:<img src={profilePic1} alt="user-1"/>}
                 </div>
                 <p>Image URL:</p>
                 <input type="text" defaultValue={props.actualProfile.photo_one} onChange={(e) => setprofilePic1(e.target.value)}></input>
@@ -57,7 +57,7 @@ function ProfPic(props) {
                         <div className="profpic-view-image-container">
                             {!profilePic2?
                                 <img src="https://via.placeholder.com/150" alt="placeholder"/>:
-                                <img src={profilePic2} alt="user-picture-1"/>}
+                                <img src={profilePic2} alt="user-2"/>}
                         </div>
                         <p>Image URL:</p>
                         <input type="text" defaultValue={props.actualProfile.photo_two} onChange={(e) => setprofilePic2(e.target.value)}></input>
@@ -67,7 +67,7 @@ function ProfPic(props) {
                         <div className="profpic-view-image-container">
                             {!profilePic3?
                                 <img src="https://via.placeholder.com/150" alt="placeholder"/>:
-                                <img src={profilePic3} alt="user-picture-1"/>}
+                                <img src={profilePic3} alt="user-3"/>}
                         </div>
                         <p>Image URL:</p>
                         <input type="text" defaultValue={props.actualProfile.photo_three} onChange={(e) => setprofilePic3(e.target.value)}></input>
@@ -77,7 +77,7 @@ function ProfPic(props) {
                         <div className="profpic-view-image-container">
                             {!profilePic4?
                                 <img src="https://via.placeholder.com/150" alt="placeholder"/>:
-                                <img src={profilePic4} alt="user-picture-1"/>}
+                                <img src={profilePic4} alt="user-4"/>}
                         </div>
                         <p>Image URL:</p>
                         <input type="text" defaultValue={props.actualProfile.photo_four} onChange={(e) => setprofilePic4(e.target.value)}></input>
@@ -87,7 +87,7 @@ function ProfPic(props) {
                         <div className="profpic-view-image-container">
                             {!profilePic5?
                                 <img src="https://via.placeholder.com/150" alt="placeholder"/>:
-                                <img src={profilePic5} alt="user-picture-1"/>}
+                                <img src={profilePic5} alt="user-5"/>}
                         </div>
                         <p>Image URL:</p>
                         <input type="text" defaultValue={props.actualProfile.photo_five} onChange={(e) => setprofilePic5(e.target.value)}></input>

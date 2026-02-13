@@ -20,7 +20,7 @@ function App(props) {
       props.loginUser(JSON.parse(localStorage.getItem('loggedInUser')));
     }
 
-  },[])
+  },[props])
 
     return (
         <div className="App">

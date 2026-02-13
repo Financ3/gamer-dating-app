@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 
 const MappedMatches = (props) => {
   const { match } = props;
-  const { profile1, profile2 } = match;
- 
+
   
   return props.userReducer.user.profile_id === match.profile1 ? (
     <div className="mappedMatches">

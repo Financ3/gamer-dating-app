@@ -31,9 +31,8 @@ const Credentials = (props) => {
             password: password
         }
 
-        let res;
         try {
-            res = await axios.post('/auth/signup',{profile: props.actualProfile, user: newUser});
+            await axios.post('/auth/signup',{profile: props.actualProfile, user: newUser});
         } catch (err) {
             console.log("Duplicate email - " + err);
             alert("Email already exists. Please login, or use a different email.");

@@ -87,7 +87,7 @@ i = 100-i
 setCount(i)
 let update = axios.get(`/auth/updateuser/${id}`).then(res=>res.data).catch(err=>console.log(err))
 props.updateUser(update)
-},[id,count, first_name, last_name, gamer_tag, location, about_me, sexual_orientation, sex,preferred_pronoun, height, activity_level, religion, education, occupation, kids, alcohol, smoking, cannabis, recreational_drugs, favorite_food, current_game, photo_one, photo_two, photo_three, photo_four, photo_five, user_id])
+},[props,id,count, first_name, last_name, gamer_tag, location, about_me, sexual_orientation, sex,preferred_pronoun, height, activity_level, religion, education, occupation, kids, alcohol, smoking, cannabis, recreational_drugs, favorite_food, current_game, photo_one, photo_two, photo_three, photo_four, photo_five, user_id])
 
     return (
         <div className="edit-profile-container">
@@ -102,27 +102,27 @@ props.updateUser(update)
                     <h1>Profile Images</h1>
                 </div>
                 <div className="edit-profile-edit-images-image-container">
-                    <img alt='profile image 1' src={photo_one}/>
+                    <img alt='profile 1' src={photo_one}/>
                     <input placeholder="URL Here" value={photo_one} onChange={(e)=>setphoto_one(e.target.value)} ></input>
                 </div>
 
                 <div className="edit-profile-edit-images-image-container">
-                    <img alt='profile image 2' src={photo_two}/>
+                    <img alt='profile 2' src={photo_two}/>
                     <input placeholder="URL Here" value={photo_two} onChange={(e)=>setphoto_two(e.target.value)} ></input>
                 </div>
 
                 <div className="edit-profile-edit-images-image-container">
-                    <img alt='profile image 3' src={photo_three}/>
+                    <img alt='profile 3' src={photo_three}/>
                     <input placeholder="URL Here" value={photo_three} onChange={(e)=>setphoto_three(e.target.value)} ></input>
                 </div>
 
                 <div className="edit-profile-edit-images-image-container">
-                    <img alt='profile image 4' src={photo_four}/>
+                    <img alt='profile 4' src={photo_four}/>
                     <input placeholder="URL Here" value={photo_four} onChange={(e)=>setphoto_four(e.target.value)} ></input>
                 </div>
 
                 <div className="edit-profile-edit-images-image-container">
-                    <img alt='profile image 5' src={photo_five}/>
+                    <img alt='profile 5' src={photo_five}/>
                     <input placeholder="URL Here" value={photo_five} onChange={(e)=>setphoto_five(e.target.value)} ></input>
                 </div>
             </div>

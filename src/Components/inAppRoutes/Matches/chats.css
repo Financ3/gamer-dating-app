@@ -3,7 +3,7 @@
   height: 100vh;
   background-color: rgba(97, 198, 146);
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   flex-direction: column-reverse;
   overflow: scroll;
 }

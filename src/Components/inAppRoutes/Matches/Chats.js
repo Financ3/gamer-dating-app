@@ -112,13 +112,17 @@ const Chats = (props) => {
     notificationSound.play();
     setchat_content("");
   };
+
     useEffect(() => {
-    axios.get(`/api/matchedchat/${match_id}`).then((res) => {
-      setMessages(res.data);
-    }); 
-    getGame();
+      if (match_id) {
+        axios.get(`/api/matchedchat/${match_id}`).then((res) => {
+        setMessages(res.data);
+        }); 
+        getGame();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages,match_id]);
-// seriusly
+
   let mappedChats = messages.map((message) => {
     return (
       <MappedChats key={message.chat_id} setGame={setGame} message={message} />
