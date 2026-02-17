@@ -98,6 +98,11 @@ app.post("/auth/request-reset", authCtrl.requestPasswordReset);
 app.get("/auth/validate-token/:token", authCtrl.validateResetToken);
 app.post("/auth/reset-password", authCtrl.resetPassword);
 
+// Serve React frontend in production
+app.use(express.static(path.join(__dirname, "../build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../build", "index.html"));
+});
 
 //establish the database connection and start the server
 massive(

@@ -74,20 +74,13 @@ jobs:
               npm install -g pm2
             fi
 
-            # Install serve if not present
-            if ! command -v serve &> /dev/null; then
-              echo "📦 Installing serve..."
-              npm install -g serve
-            fi
-
-            # Setup PM2 ecosystem file if it doesn't exist
-            if [ ! -f ecosystem.config.js ]; then
-              echo "⚙️  Creating PM2 ecosystem config..."
-              cat > ecosystem.config.js << 'EOF'
+            # Setup PM2 ecosystem file (always overwrite to stay in sync)
+            echo "⚙️  Creating PM2 ecosystem config..."
+            cat > ecosystem.config.js << 'EOF'
             module.exports = {
               apps: [
                 {
-                  name: 'gamer-dating-backend',
+                  name: 'gamer-dating-app',
                   script: './server/index.js',
                   instances: 1,
                   autorestart: true,
@@ -97,24 +90,14 @@ jobs:
                     NODE_ENV: 'production',
                     NODE_OPTIONS: '--openssl-legacy-provider'
                   }
-                },
-                {
-                  name: 'gamer-dating-frontend',
-                  script: 'npx',
-                  args: 'serve -s build -l 3000',
-                  instances: 1,
-                  autorestart: true,
-                  watch: false,
-                  max_memory_restart: '500M',
-                  env: {
-                    NODE_ENV: 'production',
-                    NODE_OPTIONS: '--openssl-legacy-provider'
-                  }
                 }
               ]
             };
             EOF
-            fi
+
+            # Stop old frontend process if it exists
+            pm2 delete gamer-dating-frontend 2>/dev/null || true
+            pm2 delete gamer-dating-backend 2>/dev/null || true
 
             # Create logs directory
             mkdir -p logs
@@ -143,8 +126,5 @@ jobs:
             echo "🔍 Checking application status..."
             pm2 list
             echo ""
-            echo "📝 Recent backend logs:"
-            pm2 logs gamer-dating-backend --lines 10 --nostream || echo "Backend not running yet"
-            echo ""
-            echo "📝 Recent frontend logs:"
-            pm2 logs gamer-dating-frontend --lines 10 --nostream || echo "Frontend not running yet"
+            echo "📝 Recent logs:"
+            pm2 logs gamer-dating-app --lines 10 --nostream || echo "App not running yet"
