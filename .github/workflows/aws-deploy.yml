@@ -30,11 +30,18 @@ jobs:
         run: npm ci
 
       - name: Build React frontend
-        run: |
-          export NODE_OPTIONS=--openssl-legacy-provider
-          npm run build
+        run: npm run build
         env:
-          CI: false # Prevents treating warnings as errors
+          CI: false
+          NODE_OPTIONS: --openssl-legacy-provider
+
+      # Decode SSH key from base64 secret and write to file
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/github-actions-key.pem
+          chmod 600 ~/.ssh/github-actions-key.pem
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       # Deploy to EC2
       - name: Deploy to EC2 via SSH
@@ -42,9 +49,9 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key_path: ~/.ssh/github-actions-key.pem
           port: 22
-          script_stop: true # Stop on first error
+          script_stop: true
           script: |
             set -e
 
@@ -67,7 +74,6 @@ jobs:
               echo "⚠️  WARNING: .env file not found! Copying from .env.example"
               cp .env.example .env
               echo "⚠️  Please update .env with production values!"
-              echo "⚠️  Run: nano ${{ env.APP_DIR }}/.env"
             fi
 
             # Install/update Node.js dependencies
@@ -154,7 +160,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key_path: ~/.ssh/github-actions-key.pem
           script: |
             cd ${{ env.APP_DIR }}
             echo "🔍 Checking application status..."
