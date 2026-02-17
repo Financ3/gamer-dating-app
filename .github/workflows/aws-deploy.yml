@@ -35,21 +35,13 @@ jobs:
           CI: false
           NODE_OPTIONS: --openssl-legacy-provider
 
-      # Decode SSH key from base64 secret and write to file
-      - name: Setup SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > ~/.ssh/github-actions-key.pem
-          chmod 600 ~/.ssh/github-actions-key.pem
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
       # Deploy to EC2
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: /home/runner/.ssh/github-actions-key.pem
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script_stop: true
           script: |
@@ -160,7 +152,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: /home/runner/.ssh/github-actions-key.pem
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ${{ env.APP_DIR }}
             echo "🔍 Checking application status..."
