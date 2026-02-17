@@ -9,7 +9,7 @@ module.exports = {
         const db = req.app.get('db');
         try{
             //check if  the user already exists in the db
-            const [existingUser] = await db.get_new_user(user.email)
+            const [existingUser] = await db.get_new_user(user.email.toLowerCase())
 
             //if the user already exists, then respond to the front end.
             if (existingUser){
@@ -20,7 +20,7 @@ module.exports = {
                 console.log("salt", salt)
                 let hash = bcrypt.hashSync(user.password, salt);
                 console.log("hash", hash)
-                let [newUser] = await db.create_user(user.email, hash);
+                let [newUser] = await db.create_user(user.email.toLowerCase(), hash);
 
                 //remove the hash from the newUser object, then send it back to the front end.
                 delete newUser.hash;
@@ -66,7 +66,7 @@ module.exports = {
         const db = req.app.get("db")
         const {email, password} =req.body
        try{
-           const [verifiedUser] = await db.get_user(email)
+           const [verifiedUser] = await db.get_user(email.toLowerCase())
             if(!verifiedUser){
                 res.status(403).send('There is no account matched with that email, maybe you need to register?')
             } else{
@@ -108,8 +108,8 @@ module.exports = {
 // To get old hash, must set up through DB, not in controller/session
 // get_user
 // just kidding
-        
-        const [verifiedUser] = await db.get_user(req.session.user.email)
+
+        const [verifiedUser] = await db.get_user(req.session.user.email.toLowerCase())
 
         if (verifiedUser){
             res.status(409).send("Email is already in our system!")
@@ -118,7 +118,7 @@ module.exports = {
             let hash = bcrypt.hashSync(password, salt);
 
 // did they type in the password input ? yes, then hash it regardless : if no input, then revert to old password
-        db.edit_user([id, (email || req.session.user.email), ( password !== "" ? hash : verifiedUser.hash )])
+        db.edit_user([id, (email ? email.toLowerCase() : req.session.user.email.toLowerCase()), ( password !== "" ? hash : verifiedUser.hash )])
         .then(([updatedUser]) => {
             
             delete updatedUser.hash
@@ -134,9 +134,9 @@ module.exports = {
         const {id} = req.params;
         const { oldEmail, newEmail, oldPassword, newPassword } = req.body;
 
-        //first check the old email and password, only make the updates if the old credentials are correct. 
+        //first check the old email and password, only make the updates if the old credentials are correct.
         try{
-            const [verifiedUser] = await db.get_user(oldEmail)
+            const [verifiedUser] = await db.get_user(oldEmail.toLowerCase())
             if(!verifiedUser){
                 res.status(403).send('The provided credentials were incorrect - cannot update credentials without the correct old credentials.(Username)')
             } else{
@@ -146,11 +146,11 @@ module.exports = {
             if(!isAuthenticated){
             res.status(403).send('The provided credentials were incorrect - cannot update credentials without the correct old credentials.(Password)')
             } else{
-            //now that we know the old credentials are correct, update the user with the new credentials. 
+            //now that we know the old credentials are correct, update the user with the new credentials.
             let salt = bcrypt.genSaltSync(10);
             let hash = bcrypt.hashSync(newPassword, salt);
 
-            const [updatedUser] = await db.edit_user(id, newEmail, hash);
+            const [updatedUser] = await db.edit_user(id, newEmail.toLowerCase(), hash);
 
             delete updatedUser.hash;
            
@@ -168,7 +168,7 @@ module.exports = {
         const db = req.app.get("db");
         const { email } = req.query;
         //check the DB to see if the email already exists.
-        const [checkedEmail] = await db.check_duplicate_email(email);
+        const [checkedEmail] = await db.check_duplicate_email(email.toLowerCase());
         console.log(checkedEmail)
         if (checkedEmail) {
             res.status(200).send(true);
@@ -186,7 +186,7 @@ module.exports = {
 
         try {
             // Check if user exists
-            const [user] = await db.get_user(email);
+            const [user] = await db.get_user(email.toLowerCase());
             console.log("User requesting password reset: ", user);
 
             // For security, always return success even if email doesn't exist
@@ -204,10 +204,10 @@ module.exports = {
             const resetTokenExpiry = Date.now() + 3600000; // 1 hour in milliseconds
 
             // Save token and expiry to database
-            await db.update_reset_token(email, resetToken, resetTokenExpiry);
+            await db.update_reset_token(email.toLowerCase(), resetToken, resetTokenExpiry);
             console.log("sending password reset email to: ", email, " with token: ", resetToken);
             // Send password reset email
-            await sendPasswordResetEmail(email, resetToken);
+            await sendPasswordResetEmail(email.toLowerCase(), resetToken);
 
             res.status(200).send({
                 message: 'If an account with that email exists, a password reset link has been sent.'
