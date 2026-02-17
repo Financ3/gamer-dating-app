@@ -46,7 +46,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          source: "build/,server/,node_modules/,package.json,package-lock.json,.env.example"
+          source: "build/,server/,node_modules/,package.json,package-lock.json,.env.example,ecosystem.config.js"
           target: ${{ env.APP_DIR }}
           overwrite: true
 
@@ -78,28 +78,7 @@ jobs:
               npm install -g pm2
             fi
 
-            # Setup PM2 ecosystem file (always overwrite to stay in sync)
-            echo "⚙️  Creating PM2 ecosystem config..."
-            cat > ecosystem.config.js << 'EOF'
-            module.exports = {
-              apps: [
-                {
-                  name: 'gamer-dating-app',
-                  script: './server/index.js',
-                  instances: 1,
-                  autorestart: true,
-                  watch: false,
-                  max_memory_restart: '1G',
-                  env: {
-                    NODE_ENV: 'production',
-                    NODE_OPTIONS: '--openssl-legacy-provider'
-                  }
-                }
-              ]
-            };
-            EOF
-
-            # Stop old frontend process if it exists
+            # Stop old processes if they exist
             pm2 delete gamer-dating-frontend 2>/dev/null || true
             pm2 delete gamer-dating-backend 2>/dev/null || true
 
