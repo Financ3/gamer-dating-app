@@ -22,3 +22,20 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# PM2
+.pm2
+logs/
+*.log
+
+# SSH keys
+*.pem
+*.key
+
+# Test files (optional - keep if you want to track tests)
+test*.js
+quick*.js
+check*.js
+try*.js
+verify*.js
+runLowercaseEmailsMigration.js

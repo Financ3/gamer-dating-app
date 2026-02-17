@@ -1,57 +1,167 @@
-name: Deploy to AWS
+name: Deploy to AWS EC2
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+env:
+  NODE_VERSION: '18'
+  APP_DIR: '/home/ec2-user/gamer-dating-app' # TODO: Update this path if different
 
 jobs:
-
-  deploy-app:
+  deploy:
     name: Build and Deploy to EC2
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      # Build Frontend
+      - name: Install frontend dependencies
+        run: npm ci
 
-      - name: Build frontend
+      - name: Build React frontend
         run: |
           export NODE_OPTIONS=--openssl-legacy-provider
           npm run build
+        env:
+          CI: false # Prevents treating warnings as errors
 
-      - name: Install backend dependencies
-        run: cd server && npm install
+      # Deploy to EC2
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script_stop: true # Stop on first error
+          script: |
+            set -e
 
-      - name: Deploy to EC2 and restart
-        uses: appleboy/ssh-action@v0.1.7
+            echo "🚀 Starting deployment..."
+
+            # Create app directory if it doesn't exist
+            mkdir -p ${{ env.APP_DIR }}
+            cd ${{ env.APP_DIR }}
+
+            # Pull latest code
+            echo "📥 Pulling latest code..."
+            if [ -d .git ]; then
+              git pull origin main
+            else
+              git clone ${{ github.server_url }}/${{ github.repository }}.git .
+            fi
+
+            # Check if .env exists
+            if [ ! -f .env ]; then
+              echo "⚠️  WARNING: .env file not found! Copying from .env.example"
+              cp .env.example .env
+              echo "⚠️  Please update .env with production values!"
+              echo "⚠️  Run: nano ${{ env.APP_DIR }}/.env"
+            fi
+
+            # Install/update Node.js dependencies
+            echo "📦 Installing dependencies..."
+            export NODE_OPTIONS=--openssl-legacy-provider
+            npm ci --production || npm install --production
+
+            # Build frontend on server
+            echo "🏗️  Building frontend..."
+            npm run build
+
+            # Install backend dependencies
+            echo "📦 Installing backend dependencies..."
+            cd server
+            npm ci --production || npm install --production
+            cd ..
+
+            # Install PM2 if not present
+            if ! command -v pm2 &> /dev/null; then
+              echo "📦 Installing PM2..."
+              npm install -g pm2
+            fi
+
+            # Install serve if not present
+            if ! command -v serve &> /dev/null; then
+              echo "📦 Installing serve..."
+              npm install -g serve
+            fi
+
+            # Setup PM2 ecosystem file if it doesn't exist
+            if [ ! -f ecosystem.config.js ]; then
+              echo "⚙️  Creating PM2 ecosystem config..."
+              cat > ecosystem.config.js << 'EOF'
+            module.exports = {
+              apps: [
+                {
+                  name: 'gamer-dating-backend',
+                  script: './server/index.js',
+                  instances: 1,
+                  autorestart: true,
+                  watch: false,
+                  max_memory_restart: '1G',
+                  env: {
+                    NODE_ENV: 'production',
+                    NODE_OPTIONS: '--openssl-legacy-provider'
+                  }
+                },
+                {
+                  name: 'gamer-dating-frontend',
+                  script: 'npx',
+                  args: 'serve -s build -l 3000',
+                  instances: 1,
+                  autorestart: true,
+                  watch: false,
+                  max_memory_restart: '500M',
+                  env: {
+                    NODE_ENV: 'production',
+                    NODE_OPTIONS: '--openssl-legacy-provider'
+                  }
+                }
+              ]
+            };
+            EOF
+            fi
+
+            # Create logs directory
+            mkdir -p logs
+
+            # Restart applications with PM2
+            echo "🔄 Restarting applications..."
+            pm2 startOrRestart ecosystem.config.js
+            pm2 save
+
+            # Setup PM2 to start on system boot (first time only)
+            pm2 startup systemd -u ${{ secrets.EC2_USER }} --hp /home/${{ secrets.EC2_USER }} || true
+
+            echo "✅ Deployment completed successfully!"
+            echo ""
+            echo "📊 PM2 Status:"
+            pm2 list
+
+      - name: Verify deployment
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            set -e
-            cd /path/to/app
-            git pull
-            export NODE_OPTIONS=--openssl-legacy-provider
-            npm install
-            npm run build
-            cd server && npm install
-            pm2 restart index.js || pm2 start index.js
-            cd ..
-            # Install serve if not present
-            if ! command -v serve > /dev/null; then
-              npm install -g serve
-            fi
-            pm2 delete serve || true
-            export NODE_OPTIONS=--openssl-legacy-provider
-            pm2 start "serve" --name "frontend" -- -s build -l 3000
-
-
+            cd ${{ env.APP_DIR }}
+            echo "🔍 Checking application status..."
+            pm2 list
+            echo ""
+            echo "📝 Recent backend logs:"
+            pm2 logs gamer-dating-backend --lines 10 --nostream || echo "Backend not running yet"
+            echo ""
+            echo "📝 Recent frontend logs:"
+            pm2 logs gamer-dating-frontend --lines 10 --nostream || echo "Frontend not running yet"
