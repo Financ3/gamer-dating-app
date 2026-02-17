@@ -49,7 +49,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: ~/.ssh/github-actions-key.pem
+          key_path: /home/runner/.ssh/github-actions-key.pem
           port: 22
           script_stop: true
           script: |
@@ -160,7 +160,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key_path: ~/.ssh/github-actions-key.pem
+          key_path: /home/runner/.ssh/github-actions-key.pem
           script: |
             cd ${{ env.APP_DIR }}
             echo "🔍 Checking application status..."
