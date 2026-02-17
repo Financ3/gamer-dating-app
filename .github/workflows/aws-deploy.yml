@@ -35,6 +35,10 @@ jobs:
           CI: false
           NODE_OPTIONS: --openssl-legacy-provider
 
+      # Remove build cache (not needed in production, causes permission errors during scp)
+      - name: Clean node_modules cache
+        run: rm -rf node_modules/.cache
+
       # Copy built files to EC2
       - name: Deploy files to EC2
         uses: appleboy/scp-action@v0.1.7
