@@ -14,7 +14,8 @@
       "mcp__playwright__browser_close",
       "Bash(npm install:*)",
       "Bash(node verifySetup.js:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(git add:*)"
     ]
   }
 }

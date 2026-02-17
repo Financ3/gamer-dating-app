@@ -1,0 +1,213 @@
+═══════════════════════════════════════════════════════════════
+                    QUICK EC2 SETUP COMMANDS
+       Copy and paste these commands into your EC2 terminal
+═══════════════════════════════════════════════════════════════
+
+STEP 1: CONNECT TO EC2
+──────────────────────────────────────────────────────────────
+# On your LOCAL machine (Windows), open terminal and run:
+ssh -i YOUR_KEY.pem ec2-user@YOUR_EC2_IP
+
+# Replace:
+#   YOUR_KEY.pem with your actual .pem file path
+#   YOUR_EC2_IP with your EC2 public IP address
+
+# Example:
+# ssh -i C:\Users\tanne\Downloads\my-key.pem ec2-user@54.123.45.67
+
+
+STEP 2: RUN AUTOMATED SETUP (RECOMMENDED)
+──────────────────────────────────────────────────────────────
+# Once connected to EC2, copy and paste these commands:
+
+curl -o ec2-setup.sh https://raw.githubusercontent.com/Financ3/gamer-dating-app/main/ec2-setup.sh
+
+chmod +x ec2-setup.sh
+
+bash ec2-setup.sh
+
+
+# The script will ask you for:
+#   1. GitHub repository URL: https://github.com/Financ3/gamer-dating-app.git
+#   2. Configure .env file (see below for values)
+#   3. Setup Nginx (say 'y' for yes)
+
+
+STEP 3: .ENV CONFIGURATION
+──────────────────────────────────────────────────────────────
+# When prompted to edit .env, enter these values:
+
+SERVER_PORT=5050
+
+CONNECTION_STRING=postgresql://USERNAME:PASSWORD@DB_HOST:5432/DB_NAME
+# Replace with your actual database credentials
+
+SESSION_SECRET=GENERATE_A_LONG_RANDOM_STRING_HERE
+
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+EMAIL_FROM=Gamer Dating <noreply@gamerdating.com>
+
+CLIENT_URL=http://YOUR_EC2_IP:3000
+
+
+# To save in nano editor:
+#   Ctrl+O (WriteOut), Enter (confirm), Ctrl+X (exit)
+
+
+STEP 4: VERIFY INSTALLATION
+──────────────────────────────────────────────────────────────
+# Check Node.js
+node --version
+
+# Check PM2 processes
+pm2 list
+
+# Check logs
+pm2 logs --lines 20
+
+# Check ports
+sudo netstat -tlnp | grep -E '3000|5050'
+
+
+STEP 5: TEST IN BROWSER
+──────────────────────────────────────────────────────────────
+# Open these URLs in your browser:
+
+Frontend: http://YOUR_EC2_IP:3000
+Backend:  http://YOUR_EC2_IP:5050/auth/duplicate?email=test@test.com
+
+
+STEP 6: VERIFY SECURITY GROUP (On AWS Console)
+──────────────────────────────────────────────────────────────
+Make sure these ports are open:
+  ✓ Port 22   - SSH (your IP only)
+  ✓ Port 80   - HTTP (0.0.0.0/0)
+  ✓ Port 443  - HTTPS (0.0.0.0/0)
+  ✓ Port 3000 - Frontend (0.0.0.0/0)
+  ✓ Port 5050 - Backend (0.0.0.0/0)
+
+
+ALTERNATIVE: MANUAL SETUP COMMANDS
+══════════════════════════════════════════════════════════════
+
+If you prefer manual setup, copy these commands one by one:
+
+# Install Node.js 18
+curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo yum install -y nodejs
+
+# Install Git
+sudo yum install -y git
+
+# Install PM2
+sudo npm install -g pm2
+
+# Install serve
+sudo npm install -g serve
+
+# Create app directory
+mkdir -p /home/ec2-user/gamer-dating-app
+cd /home/ec2-user/gamer-dating-app
+
+# Clone repository
+git clone https://github.com/Financ3/gamer-dating-app.git .
+
+# Create .env file
+cp .env.example .env
+nano .env
+# (Edit values as shown in STEP 3)
+
+# Install dependencies
+export NODE_OPTIONS=--openssl-legacy-provider
+npm install
+
+# Build frontend
+npm run build
+
+# Install backend dependencies
+cd server
+npm install
+cd ..
+
+# Start with PM2
+pm2 start ecosystem.config.js
+pm2 save
+
+# Setup PM2 startup
+pm2 startup systemd
+# Then copy and run the command it outputs
+
+
+USEFUL PM2 COMMANDS
+══════════════════════════════════════════════════════════════
+
+# List running processes
+pm2 list
+
+# View logs
+pm2 logs
+
+# View specific app logs
+pm2 logs gamer-dating-backend
+pm2 logs gamer-dating-frontend
+
+# Restart all apps
+pm2 restart all
+
+# Stop all apps
+pm2 stop all
+
+# Monitor apps
+pm2 monit
+
+# Delete all apps
+pm2 delete all
+
+
+TROUBLESHOOTING COMMANDS
+══════════════════════════════════════════════════════════════
+
+# Check if app is accessible
+curl http://localhost:3000
+curl http://localhost:5050/auth/duplicate?email=test@test.com
+
+# Check listening ports
+sudo netstat -tlnp | grep -E '3000|5050'
+
+# Check Node.js process
+ps aux | grep node
+
+# Test database connection
+psql "$CONNECTION_STRING" -c "SELECT NOW()"
+
+# View system logs
+journalctl -xe
+
+# Check disk space
+df -h
+
+# Check memory
+free -m
+
+
+NEXT STEPS AFTER SETUP
+══════════════════════════════════════════════════════════════
+
+Once setup is complete:
+
+1. Open browser to http://YOUR_EC2_IP:3000
+2. Test login/register functionality
+3. Verify database is working
+4. Test password reset email
+
+Then you're ready for automated deployments!
+Every push to main will auto-deploy to your EC2.
+
+═══════════════════════════════════════════════════════════════
+
+Need help? Check EC2_SETUP_WALKTHROUGH.md for detailed guide.
+
+═══════════════════════════════════════════════════════════════

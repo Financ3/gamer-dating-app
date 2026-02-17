@@ -1,0 +1,167 @@
+╔═══════════════════════════════════════════════════════════════╗
+║          PRE-DEPLOYMENT CHECKLIST - READ BEFORE PUSHING       ║
+╚═══════════════════════════════════════════════════════════════╝
+
+🚀 READY TO DEPLOY! But first verify these items:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ 1. GITHUB SECRETS CONFIGURED (You confirmed these are done)
+   - EC2_HOST
+   - EC2_USER
+   - EC2_SSH_KEY
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  2. VERIFY APP DIRECTORY PATH IN WORKFLOW
+
+   Current setting: /home/ec2-user/gamer-dating-app
+
+   Is this correct for your EC2 instance?
+
+   If NO:
+   - Edit: .github/workflows/aws-deploy.yml (line 11)
+   - Change APP_DIR to your actual path
+   - Recommit before pushing
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 3. EC2 INSTANCE PREREQUISITES
+
+   Before first deployment, SSH into EC2 and run:
+
+   Option A - Quick Setup (RECOMMENDED):
+   ────────────────────────────────────────────────────────────
+   # Download setup script
+   curl -o ec2-setup.sh https://raw.githubusercontent.com/YOUR_USERNAME/gamer-dating-app/main/ec2-setup.sh
+
+   # Make executable
+   chmod +x ec2-setup.sh
+
+   # Run setup
+   bash ec2-setup.sh
+   ────────────────────────────────────────────────────────────
+
+   Option B - Manual Setup:
+   ────────────────────────────────────────────────────────────
+   # Install Node.js 18
+   curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
+   sudo yum install -y nodejs
+
+   # Install Git
+   sudo yum install -y git
+
+   # Install PM2
+   sudo npm install -g pm2
+
+   # Install serve
+   sudo npm install -g serve
+
+   # Clone repository
+   mkdir -p /home/ec2-user/gamer-dating-app
+   cd /home/ec2-user/gamer-dating-app
+   git clone YOUR_REPO_URL .
+
+   # Create .env file
+   cp .env.example .env
+   nano .env  # Edit with production values
+   ────────────────────────────────────────────────────────────
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔐 4. EC2 SECURITY GROUP
+
+   Ensure these ports are open:
+   - Port 22 (SSH) - Your IP only
+   - Port 80 (HTTP) - 0.0.0.0/0
+   - Port 443 (HTTPS) - 0.0.0.0/0
+   - Port 3000 (Frontend) - 0.0.0.0/0 (temporary, until Nginx)
+   - Port 5050 (Backend) - 0.0.0.0/0 (temporary, until Nginx)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💾 5. DATABASE
+
+   Ensure:
+   - PostgreSQL database is running
+   - EC2 can connect to database
+   - CONNECTION_STRING is in .env file on EC2
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 DEPLOYMENT OPTIONS
+
+After verifying above, choose one:
+
+Option 1: AUTOMATIC DEPLOY (Push to main)
+──────────────────────────────────────────
+git push origin main
+
+This will automatically trigger deployment!
+
+Option 2: MANUAL DEPLOY (Safer for first deploy)
+──────────────────────────────────────────────────
+1. Push without deploying:
+   git push origin main
+
+2. Go to GitHub → Actions tab
+
+3. Wait for any running workflows to finish
+
+4. Click "Deploy to AWS EC2"
+
+5. Click "Run workflow" button
+
+6. Select branch: main
+
+7. Click "Run workflow"
+
+8. Watch the deployment in real-time!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 MONITORING DEPLOYMENT
+
+Watch in real-time:
+1. Go to GitHub → Actions tab
+2. Click on the running workflow
+3. Click "deploy" job
+4. Expand each step to see logs
+
+On EC2:
+ssh -i your-key.pem ec2-user@YOUR_EC2_IP
+pm2 list
+pm2 logs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ VERIFICATION AFTER DEPLOYMENT
+
+1. Check GitHub Actions - All steps green ✓
+2. SSH into EC2: pm2 list (should show 2 processes)
+3. Open browser: http://YOUR_EC2_IP:3000
+4. Test login/register functionality
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🆘 IF DEPLOYMENT FAILS
+
+1. Check GitHub Actions logs for errors
+2. SSH into EC2 and check PM2 logs:
+   pm2 logs --lines 50
+3. Verify .env file exists on EC2
+4. Check EC2 security group settings
+5. Verify database connection
+
+Need help? Check DEPLOYMENT.md for troubleshooting guide!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ready to deploy? 🚀
+
+Let me know:
+1. Is the APP_DIR path correct? (/home/ec2-user/gamer-dating-app)
+2. Have you set up the EC2 instance with prerequisites?
+3. Do you want to push now and trigger deployment?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
