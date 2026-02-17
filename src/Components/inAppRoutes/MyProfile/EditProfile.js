@@ -9,7 +9,6 @@ import {updateUser}from '../../../ducks/userReducer'
 //EditProfile component
 const EditProfile=(props)=>{
     const{profile_id}=props.userReducer.user
-    const id =profile_id
     const{user}=props.userReducer
     const{user_id}=props.userReducer.user
     const [about_me,setabout_me]=useState(user.about_me)
@@ -54,40 +53,37 @@ const EditProfile=(props)=>{
     }  
 
 
-useEffect(()=>{ 
+useEffect(()=>{
     let i = 0;
-    !current_game ? i++: console.log(i)
-    !first_name ? i++: console.log(i)
-!last_name ? i++: console.log(i)
-!gamer_tag ? i++: console.log(i)
-!location ? i++: console.log(i)
-!about_me ? i++: console.log(i)
-!sexual_orientation ? i++: console.log(i)
-!sex ? i++: console.log(i)
-!preferred_pronoun ? i++: console.log(i)
-!height ? i++: console.log(i)
-!activity_level ? i++: console.log(i)
-!religion ? i++: console.log(i)
-!education ? i++: console.log(i)
-!occupation ? i++: console.log(i)
-!kids ? i++: console.log(i)
-!alcohol ? i++: console.log(i)
-!smoking ? i++: console.log(i)
-!cannabis ? i++: console.log(i)
-!recreational_drugs ? i++: console.log(i)
-!favorite_food ? i++: console.log(i)
-!current_game ? i++: console.log(i)
-!photo_one ? i++: console.log(i)
-!photo_two ? i++: console.log(i)
-!photo_three ? i++: console.log(i)
-!photo_four ? i++: console.log(i)
-!photo_five ? i++: console.log(i)
-i=(i/25)*100
-i = 100-i
-setCount(i)
-let update = axios.get(`/auth/updateuser/${id}`).then(res=>res.data).catch(err=>console.log(err))
-props.updateUser(update)
-},[props,id,count, first_name, last_name, gamer_tag, location, about_me, sexual_orientation, sex,preferred_pronoun, height, activity_level, religion, education, occupation, kids, alcohol, smoking, cannabis, recreational_drugs, favorite_food, current_game, photo_one, photo_two, photo_three, photo_four, photo_five, user_id])
+    if (!current_game) i++;
+    if (!first_name) i++;
+    if (!last_name) i++;
+    if (!gamer_tag) i++;
+    if (!location) i++;
+    if (!about_me) i++;
+    if (!sexual_orientation) i++;
+    if (!sex) i++;
+    if (!preferred_pronoun) i++;
+    if (!height) i++;
+    if (!activity_level) i++;
+    if (!religion) i++;
+    if (!education) i++;
+    if (!occupation) i++;
+    if (!kids) i++;
+    if (!alcohol) i++;
+    if (!smoking) i++;
+    if (!cannabis) i++;
+    if (!recreational_drugs) i++;
+    if (!favorite_food) i++;
+    if (!photo_one) i++;
+    if (!photo_two) i++;
+    if (!photo_three) i++;
+    if (!photo_four) i++;
+    if (!photo_five) i++;
+    i=(i/25)*100;
+    i = 100-i;
+    setCount(i);
+},[first_name, last_name, gamer_tag, location, about_me, sexual_orientation, sex, preferred_pronoun, height, activity_level, religion, education, occupation, kids, alcohol, smoking, cannabis, recreational_drugs, favorite_food, current_game, photo_one, photo_two, photo_three, photo_four, photo_five])
 
     return (
         <div className="edit-profile-container">

@@ -18,6 +18,7 @@
     "express-session": "^1.17.1",
     "massive": "^6.8.0",
     "mixin-deep": "^2.0.1",
+    "nodemailer": "^8.0.1",
     "pascalcase": "^1.0.0",
     "path": "^0.12.7",
     "react": "^17.0.2",

@@ -8,7 +8,7 @@ const MappedMatches = (props) => {
   return props.userReducer.user.profile_id === match.profile1 ? (
     <div className="mappedMatches">
       <div className="mappedMatchesContainer">
-        <Link to={`/chats/${match.profile1}`}>
+        <Link to={`/chats/${match.match_id}`}>
           <div className="matches-picture-div">
             <img id='mappedMatchesPicture' src={match.photo2} alt={"p"}></img>
           </div>
@@ -18,7 +18,7 @@ const MappedMatches = (props) => {
     </div>
   ) : (
     <div className='mappedMatches'>
-      <Link to={`/chats/${match.profile2}`}>
+      <Link to={`/chats/${match.match_id}`}>
       <div className="matches-picture-div">
         <img className="mappedMatchesPicture" src={match.photo1} alt={"p"}></img>
      </div>

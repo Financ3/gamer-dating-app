@@ -1,5 +1,7 @@
 //authController
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const { sendPasswordResetEmail } = require('../utils/emailService');
 
 module.exports = {
     register: async (req, res) => {
@@ -10,7 +12,7 @@ module.exports = {
             const [existingUser] = await db.get_new_user(user.email)
 
             //if the user already exists, then respond to the front end.
-            if (existingUser){1
+            if (existingUser){
                 res.status(409).send("User already registered!")
             } else {
                 //if the user doesn't exist. Create a new user object
@@ -92,8 +94,9 @@ module.exports = {
 
 
     logOut: (req,res) => {
-        req.session.destroy()
-        res.status(200).send(req.session)
+        req.session.destroy(() => {
+            res.sendStatus(200)
+        })
     },
 
     
@@ -163,7 +166,7 @@ module.exports = {
     },
     duplicate: async (req, res) => {
         const db = req.app.get("db");
-        const { email } = req.body;
+        const { email } = req.query;
         //check the DB to see if the email already exists.
         const [checkedEmail] = await db.check_duplicate_email(email);
         console.log(checkedEmail)
@@ -171,6 +174,110 @@ module.exports = {
             res.status(200).send(true);
         } else {
             res.status(200).send(false);
+        }
+    },
+
+    /**
+     * Request password reset - generates token and sends email
+     */
+    requestPasswordReset: async (req, res) => {
+        const db = req.app.get("db");
+        const { email } = req.body;
+
+        try {
+            // Check if user exists
+            const [user] = await db.get_user(email);
+            console.log("User requesting password reset: ", user);
+
+            // For security, always return success even if email doesn't exist
+            // This prevents email enumeration attacks
+            if (!user) {
+                return res.status(200).send({
+                    message: 'If an account with that email exists, a password reset link has been sent.'
+                });
+            }
+
+            // Generate secure random token
+            const resetToken = crypto.randomBytes(32).toString('hex');
+
+            // Set expiration to 1 hour from now
+            const resetTokenExpiry = Date.now() + 3600000; // 1 hour in milliseconds
+
+            // Save token and expiry to database
+            await db.update_reset_token(email, resetToken, resetTokenExpiry);
+            console.log("sending password reset email to: ", email, " with token: ", resetToken);
+            // Send password reset email
+            await sendPasswordResetEmail(email, resetToken);
+
+            res.status(200).send({
+                message: 'If an account with that email exists, a password reset link has been sent.'
+            });
+        } catch (err) {
+            console.log("Error requesting password reset - " + err);
+            res.status(500).send("Error processing password reset request");
+        }
+    },
+
+    /**
+     * Validate reset token - checks if token exists and hasn't expired
+     */
+    validateResetToken: async (req, res) => {
+        const db = req.app.get("db");
+        const { token } = req.params;
+
+        try {
+            const [user] = await db.get_user_by_reset_token(token);
+
+            if (!user) {
+                return res.status(400).send({ valid: false, message: 'Invalid or expired reset token' });
+            }
+
+            // Check if token has expired
+            if (Date.now() > user.reset_token_expiry) {
+                return res.status(400).send({ valid: false, message: 'Reset token has expired' });
+            }
+
+            res.status(200).send({ valid: true, message: 'Token is valid' });
+        } catch (err) {
+            console.log("Error validating reset token - " + err);
+            res.status(500).send({ valid: false, message: 'Error validating reset token' });
+        }
+    },
+
+    /**
+     * Reset password - validates token and updates password
+     */
+    resetPassword: async (req, res) => {
+        const db = req.app.get("db");
+        const { token, newPassword } = req.body;
+
+        try {
+            // Validate token and get user
+            const [user] = await db.get_user_by_reset_token(token);
+
+            if (!user) {
+                return res.status(400).send('Invalid or expired reset token');
+            }
+
+            // Check if token has expired
+            if (Date.now() > user.reset_token_expiry) {
+                return res.status(400).send('Reset token has expired');
+            }
+
+            // Hash new password
+            let salt = bcrypt.genSaltSync(10);
+            let hash = bcrypt.hashSync(newPassword, salt);
+
+            // Update password in database
+            await db.edit_user(user.user_id, user.email, hash);
+
+            // Clear reset token and expiry
+            await db.clear_reset_token(user.user_id);
+
+            res.status(200).send({ message: 'Password has been successfully reset' });
+        } catch (err) {
+            console.log("Error resetting password - " + err);
+            res.status(500).send("Error resetting password");
         }
     }
 }

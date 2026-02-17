@@ -7,7 +7,7 @@ function AuthHome (){
         return (
             <div className="auth-view-wrapper-container">
                 <div className="auth-view-border">
-                    <div classname="auth-view-main-logo-container">
+                    <div className="auth-view-main-logo-container">
                         <img className="main-logo" src="logo_style_3.png" alt="Main OneUp Logo"></img>
                     </div>
 

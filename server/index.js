@@ -33,10 +33,7 @@ app.use(
 //sockets io.on connection happens once
 io.on('connection',(socket)=>{
 socket.on('join room',(room)=>{
-  socket.join(room,(err)=>{
-      if (err) console.log('error on join', err);
-      else console.log('joined room', room);
-  })
+  socket.join(room);
 })
 
 socket.on('new msg',(room,msg)=>{
@@ -95,6 +92,11 @@ app.post("/auth/login", authCtrl.login);
 app.delete("/auth/logout", authCtrl.logOut);
 app.put("/auth/updateuser/:id", authCtrl.updateUser);
 app.put("/auth/updatecredentials/:id", authCtrl.updateCredentials);
+
+// Password Reset Endpoints
+app.post("/auth/request-reset", authCtrl.requestPasswordReset);
+app.get("/auth/validate-token/:token", authCtrl.validateResetToken);
+app.post("/auth/reset-password", authCtrl.resetPassword);
 
 
 //establish the database connection and start the server

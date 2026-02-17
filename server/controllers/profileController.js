@@ -68,11 +68,11 @@ const {profile_id} = req.params
         let viewableProfiles;
 
         try{
-        viewableProfiles = await db.get_viewable_profiles(profile_id) 
+        viewableProfiles = await db.get_viewable_profiles(profile_id)
         }
         catch(err) {
             console.log("Can't retrieve profiles")
-            res.status(500).send(err)
+            return res.status(500).send(err)
         }
         let [profile]= viewableProfiles
             if(profile){

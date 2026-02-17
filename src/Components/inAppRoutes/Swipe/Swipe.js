@@ -24,7 +24,8 @@ function Swipe(props) {
             setIsMatch("empty");
         }
         props.getProfiles(props.userReducer.user.profile_id);
-    },[props]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[props.userReducer.user.profile_id]);
 
     const forward = () => { 
         if (idx === props.profileReducer.viewableProfiles.length-1) {

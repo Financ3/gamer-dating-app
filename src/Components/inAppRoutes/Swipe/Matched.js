@@ -15,7 +15,7 @@ function Matched(props) {
             <div className="matched-its-a-match">
                 <p>It's a Match!</p>
             </div>
-            <ProfileSmall matched={true} idx={props.idx}/>
+            <ProfileSmall matched={"match"} idx={props.idx}/>
             <div className="matched-buttons-container">
                 <div className="matched-buttons" onClick={() => {
                     props.getProfiles(props.userReducer.user.profile_id);

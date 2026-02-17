@@ -6,7 +6,10 @@ module.exports = {
       .then((dbRes) => {
         res.status(200).send(dbRes);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   },
   getAllChats: (req, res) => {
     const db = req.app.get("db");
@@ -15,7 +18,10 @@ module.exports = {
       .then((dbRes) => {
         res.status(200).send(dbRes);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   },
   addChatReply: (req, res) => {
     const db = req.app.get("db");
@@ -26,7 +32,10 @@ module.exports = {
       .then((dbRes) => {
         res.status(200).send(dbRes);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   },
   updateChatReply: (req, res) => {
     const db = req.app.get("db");
@@ -37,7 +46,10 @@ module.exports = {
       .then((dbRes) => {
         res.status(200).send(dbRes);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   },
   deleteChatReply: (req, res) => {
     const db = req.app.get("db");
@@ -47,7 +59,10 @@ module.exports = {
       .then((dbRes) => {
         res.status(200).send(dbRes);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   },
 
   getMatchedChat: (req, res) => {
@@ -57,7 +72,10 @@ module.exports = {
       .then((dbRes) => {
         res.status(200).send(dbRes);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500);
+      });
   },
 
   getMessage: (req,res) => {
@@ -67,6 +85,9 @@ module.exports = {
     .then(dbRes => {
       res.status(200).send(dbRes)
     })
-    .catch(err=> console.log(err));
+    .catch(err=> {
+      console.log(err);
+      res.sendStatus(500);
+    });
   }
 };

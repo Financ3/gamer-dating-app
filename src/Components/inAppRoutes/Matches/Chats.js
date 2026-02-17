@@ -117,11 +117,11 @@ const Chats = (props) => {
       if (match_id) {
         axios.get(`/api/matchedchat/${match_id}`).then((res) => {
         setMessages(res.data);
-        }); 
         getGame();
+        });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages,match_id]);
+  }, [match_id]);
 
   let mappedChats = messages.map((message) => {
     return (
@@ -140,8 +140,8 @@ const Chats = (props) => {
             value={chat_content}
             onChange={(e) => setchat_content(e.target.value)}
             className="chat_content"
-            type="textarea"
-            placeHolder={`Ask about their favorite game... (hint: it's ${game})`}
+            type="text"
+            placeholder={`Ask about their favorite game... (hint: it's ${game})`}
           ></input>
           <div onClick={() => handleClick()} className="messageButton">
             Send

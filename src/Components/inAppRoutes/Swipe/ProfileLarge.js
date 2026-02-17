@@ -87,13 +87,13 @@ console.log(viewableProfile)
 
                 <div className="large-profile-details-text">
                     <div className="large-profile-details-text-sub">
-                        <p>Religion: {viewableProfile.height}</p>
+                        <p>Height: {viewableProfile.height}</p>
                     </div>
                     <div className="large-profile-details-text-sub">
                         <p>Preferred Pronoun: {viewableProfile.preferred_pronoun}</p>
                     </div>
                     <div className="large-profile-details-text-sub">
-                        <p>Occupation: {viewableProfile.favorite_food}</p>
+                        <p>Favorite Food: {viewableProfile.favorite_food}</p>
                     </div>
                     <div className="large-profile-details-text-sub">
                         <p>Fitness: {viewableProfile.activity_level}</p>

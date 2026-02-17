@@ -7,7 +7,9 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
 	user_id SERIAL PRIMARY KEY,
 	email varchar(255) NOT NULL,
-	hash TEXT NOT NULL
+	hash TEXT NOT NULL,
+	reset_token TEXT,
+	reset_token_expiry BIGINT
 );
 
 CREATE TABLE profiles (

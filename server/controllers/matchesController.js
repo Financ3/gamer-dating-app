@@ -18,7 +18,7 @@ module.exports = {
             await db.create_like(profile_id_1, profile_id_2);
         } catch (err) {
             console.log("Unable to add this like to the database - " + err);
-            res.status(500).send("Unable to add this like to the database - " + err);
+            return res.status(500).send("Unable to add this like to the database - " + err);
         }
         
     //check for a match on the like table
@@ -63,17 +63,17 @@ module.exports = {
         //get the profile from the datbase
         let profile;
         try {
-            profile = await db.get_single_profile(profile_id);
+            [profile] = await db.get_single_profile(profile_id);
         } catch (err) {
             console.log("Error retrieving the disliked profile from the database - " + err);
-            res.status(500).send("Error retrieving the disliked profile from the database - " + err);
+            return res.status(500).send("Error retrieving the disliked profile from the database - " + err);
         }
         //update the profile with its own data.
         try {
             await db.edit_profile(profile.profile_id, profile.first_name, profile.last_name, profile.gamer_tag, profile.location, profile.about_me, profile.sexual_orientation, profile.sex, profile.preferred_pronoun, profile.height, profile.activity_level, profile.religion, profile.education, profile.occupation, profile.kids, profile.alcohol, profile.smoking, profile.cannabis, profile.recreational_drugs, profile.favorite_food, profile.current_game, profile.photo_one, profile.photo_two, profile.photo_three, profile.photo_four, profile.photo_five, profile.user_id);
         } catch (err) {
             console.log("Error making the update to the disliked profile - " + err);
-            res.status(500).send("Error making the update to the disliked profile - " + err)
+            return res.status(500).send("Error making the update to the disliked profile - " + err)
         }
         res.sendStatus(200);
     },
@@ -101,7 +101,7 @@ module.exports = {
             await db.delete_match(match_id);
         } catch (err) {
             console.log("Error removing the match from the database - " + err);
-            res.status(500).send("Error removing the match from the database - " + err);
+            return res.status(500).send("Error removing the match from the database - " + err);
         }
 
     //remove the like from likes table
@@ -109,7 +109,7 @@ module.exports = {
             await db.delete_like(user_id, profile_id)
         } catch (err) {
             console.log("Error removing the like from the database - " + err);
-            res.status(500).send("Error removing the like from the database - " + err);
+            return res.status(500).send("Error removing the like from the database - " + err);
         }
         res.sendStatus(200);
     }

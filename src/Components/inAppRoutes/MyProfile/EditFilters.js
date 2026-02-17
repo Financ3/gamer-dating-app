@@ -264,7 +264,7 @@ function EditFilters(props) {
                                 <p>Old Password:</p>
                             </div>
                             <div className="edit-filters-account-setting-input">
-                                <input onChange={ev => setOldPassword(ev.target.value)}></input>
+                                <input type="password" onChange={ev => setOldPassword(ev.target.value)}></input>
                             </div>
                         </div>
 
@@ -284,7 +284,7 @@ function EditFilters(props) {
                                 <p>New Password:</p>
                             </div>
                             <div className="edit-filters-account-setting-input">
-                                <input onChange={ev => setNewPassword(ev.target.value)}></input>
+                                <input type="password" onChange={ev => setNewPassword(ev.target.value)}></input>
                             </div>
                         </div>
 
@@ -293,7 +293,7 @@ function EditFilters(props) {
                                 <p>Confirm New Password:</p>
                             </div>
                             <div className="edit-filters-account-setting-input">
-                                <input onChange={ev => setConfirmPassword(ev.target.value)}></input>
+                                <input type="password" onChange={ev => setConfirmPassword(ev.target.value)}></input>
                             </div>
                         </div>
 

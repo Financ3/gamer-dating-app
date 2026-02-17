@@ -19,7 +19,7 @@ export function loginUser(loggedInUser) {
 }
 
 export const registerUser=(email,password) => {
-    let register = axios.post('/auth/signUp', {email,password}).then(res => res.data)
+    let register = axios.post('/auth/signup', {email,password}).then(res => res.data)
     return {
         type: REGISTER_USER,
         payload: register

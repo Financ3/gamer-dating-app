@@ -16,8 +16,8 @@ const Matches = (props) => {
 const {getMatches} =props
 const {isLoggedIn}=props.userReducer
 useEffect(()=>{
- !isLoggedIn ?  history.push('/login'): console.log(profile_id)
-})
+ if (!isLoggedIn) { history.push('/login') }
+},[isLoggedIn, history])
   useEffect(() => {
     getMatches(profile_id);
     axios.get(`/api/allmatches/${profile_id}`)
