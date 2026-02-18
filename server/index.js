@@ -4,10 +4,12 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const massive = require("massive");
 const session = require("express-session");
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 const profileController = require("./controllers/profileController");
 const matchesController = require("./controllers/matchesController");
 const chatsController = require("./controllers/chatsController");
 const authCtrl = require("./controllers/authController");
+const isAuthenticated = require("./middleware/isAuthenticated");
 
 const { SERVER_PORT, CONNECTION_STRING, SESSION_SECRET } = process.env;
 
@@ -17,6 +19,31 @@ const httpServer = require("http").createServer(app);
 //pass server to io connection
 const io = require("socket.io")(httpServer);
 app.use(express.json());
+
+// Rate limiters for public auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  message: 'Too many requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const signupLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10,
+  message: 'Too many accounts created from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const resetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  message: 'Too many password reset requests, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 app.use(
   session({
@@ -49,6 +76,9 @@ const db = app.get('db')
 })
 
 //Controller endpoints here
+
+// Protect all /api routes — must be logged in
+app.use('/api', isAuthenticated);
 
 //PROFILE ENDPOINTS
 //update profile: receives a profile object and sends it to the DB to update that profile object in the DB. 
@@ -86,17 +116,17 @@ app.put("/api/chat/:chat_id", chatsController.updateChatReply);
 
 
 // Authentication Controller Endpoints
-app.get("/auth/duplicate", authCtrl.duplicate);
-app.post("/auth/signup", authCtrl.register);
-app.post("/auth/login", authCtrl.login);
-app.delete("/auth/logout", authCtrl.logOut);
-app.put("/auth/updateuser/:id", authCtrl.updateUser);
-app.put("/auth/updatecredentials/:id", authCtrl.updateCredentials);
+app.get("/auth/duplicate", authLimiter, authCtrl.duplicate);
+app.post("/auth/signup", signupLimiter, authCtrl.register);
+app.post("/auth/login", authLimiter, authCtrl.login);
+app.delete("/auth/logout", isAuthenticated, authCtrl.logOut);
+app.put("/auth/updateuser/:id", isAuthenticated, authCtrl.updateUser);
+app.put("/auth/updatecredentials/:id", isAuthenticated, authCtrl.updateCredentials);
 
 // Password Reset Endpoints
-app.post("/auth/request-reset", authCtrl.requestPasswordReset);
+app.post("/auth/request-reset", resetLimiter, authCtrl.requestPasswordReset);
 app.get("/auth/validate-token/:token", authCtrl.validateResetToken);
-app.post("/auth/reset-password", authCtrl.resetPassword);
+app.post("/auth/reset-password", resetLimiter, authCtrl.resetPassword);
 
 // Serve React frontend in production
 app.use(express.static(path.join(__dirname, "../build")));
