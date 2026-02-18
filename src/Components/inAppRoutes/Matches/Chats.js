@@ -63,14 +63,12 @@ const Chats = (props) => {
     };
   }, [handleSocketConnect, handleSocketDisconnect]);
   
-  const handleIncomingMsg = useCallback((msg) => {
-    setMessages((prevState) => {
-      const msgs = [...prevState];
-      msgs.unshift(msg);
-      return msgs;
+  const handleIncomingMsg = useCallback(() => {
+    axios.get(`/api/matchedchat/${match_id}`).then((res) => {
+      setMessages(res.data);
     });
     notificationSound.play();
-  }, []);
+  }, [match_id]);
 
   const setupSubscriptions = useCallback(() => {
     if (socket) {
@@ -80,7 +78,7 @@ const Chats = (props) => {
 
   const unsubscribe = useCallback(() => {
     if (socket) {
-      socket.removeEventListener("incoming msg", handleIncomingMsg);
+      socket.off("incoming msg", handleIncomingMsg);
     }
   }, [handleIncomingMsg, socket]);
 
@@ -104,10 +102,8 @@ const Chats = (props) => {
   };
   const handleClick = () => {
     socket.emit("new msg", match_id, { match_id, chat_content, profile_id });
-    setMessages((prevState) => {
-      const msg = [...prevState];
-      msg.unshift({ match_id, chat_content, profile_id });
-      return msg;
+    axios.get(`/api/matchedchat/${match_id}`).then((res) => {
+      setMessages(res.data);
     });
     notificationSound.play();
     setchat_content("");
